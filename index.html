@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Path Converter</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+
+<body>
+  <div class="left-panel">
+    <h1>Convert Paths</h1>
+    <label for="task-type">Task Type:</label>
+    <select id="task-type">
+      <option value="landers">Landers</option>
+      <option value="websites">Websites</option>
+      <option value="funnels">Funnels</option>
+    </select>
+
+    <label for="team-number">Team Number:</label>
+    <input type="text" id="team-number" placeholder="Enter team number" />
+
+    <button id="select-folder">Choose Folder(s)</button>
+    <button id="start-conversion">Start Conversion</button>
+    <button id="copy-links">Copy Links</button>
+  </div>
+
+  <div class="right-panel">
+    <label for="console-output">Console Output:</label>
+    <textarea id="console-output" readonly></textarea>
+
+    <label for="result-links">Generated Links:</label>
+    <textarea id="result-links" placeholder="Generated links will appear here..." readonly></textarea>
+  </div>
+
+  <script src="scripts/renderer.js"></script>
+</body>
+
+</html>

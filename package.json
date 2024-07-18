@@ -1,0 +1,35 @@
+{
+	"name": "path-replace",
+	"version": "1.0.0",
+	"description": "",
+	"main": "main.js",
+	"scripts": {
+		"start": "electron .",
+		"build": "electron-builder --mac --win"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"electron": "^30.0.2",
+		"electron-builder": "^24.13.3"
+	},
+	"build": {
+		"appId": "com.example.pathreplace",
+		"productName": "Path Replace",
+		"mac": {
+			"target": [
+				"dmg",
+				"zip"
+			],
+			"icon": "assets/logo.icns"
+		},
+		"win": {
+			"target": [
+				"nsis",
+				"zip"
+			],
+			"icon": "assets/logo.ico"
+		}
+	}
+}
