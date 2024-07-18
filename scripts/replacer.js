@@ -21,7 +21,7 @@ function replacePaths(file, projectRoot, basePath) {
 	let content = fs.readFileSync(file, 'utf-8')
 	const fileDir = path.dirname(file)
 
-	// Заменяем атрибуты `href`, `src`, `xlink:href`, `action`, `data-background` и `style`
+	// Заменяем атрибуты `href`, `src`, `xlink:href`, `action`, `data-background`
 	content = content.replace(
 		/(href|src|xlink:href|action|data-background)=['"](.*?)['"]/g,
 		(match, attr, relativePath) => {
@@ -38,7 +38,7 @@ function replacePaths(file, projectRoot, basePath) {
 			}
 
 			const relativeToRoot = path.relative(projectRoot, absolutePath)
-			return `${attr}='${basePath}/${relativeToRoot}'`
+			return `${attr}="${basePath}/${relativeToRoot}"`
 		}
 	)
 
@@ -65,13 +65,13 @@ function replacePaths(file, projectRoot, basePath) {
 			})
 			.join(', ')
 
-		return `srcset='${updatedSrcset}'`
+		return `srcset="${updatedSrcset}"`
 	})
 
 	// Обрабатываем пути в CSS (`url`)
 	content = content.replace(
-		/url\(['"]?(.*?)['"]?\)/g,
-		(match, relativePath) => {
+		/url\((['"]?)(.*?)\1\)/g,
+		(match, quote, relativePath) => {
 			if (isExternalPath(relativePath)) return match
 
 			let absolutePath
@@ -82,15 +82,15 @@ function replacePaths(file, projectRoot, basePath) {
 			}
 
 			const relativeToRoot = path.relative(projectRoot, absolutePath)
-			return `url('${basePath}/${relativeToRoot}')`
+			return `url(${basePath}/${relativeToRoot})`
 		}
 	)
 
 	// Обрабатываем пути в атрибутах `style`
 	content = content.replace(/style=['"](.*?)['"]/g, (match, styleContent) => {
 		const updatedStyleContent = styleContent.replace(
-			/url\(['"]?(.*?)['"]?\)/g,
-			(styleMatch, relativePath) => {
+			/url\((['"]?)(.*?)\1\)/g,
+			(styleMatch, quote, relativePath) => {
 				if (isExternalPath(relativePath)) return styleMatch
 
 				let absolutePath
@@ -101,7 +101,7 @@ function replacePaths(file, projectRoot, basePath) {
 				}
 
 				const relativeToRoot = path.relative(projectRoot, absolutePath)
-				return `url('${basePath}/${relativeToRoot}')`
+				return `url(${basePath}/${relativeToRoot})`
 			}
 		)
 		return `style="${updatedStyleContent}"`
@@ -121,7 +121,7 @@ function replacePaths(file, projectRoot, basePath) {
 			}
 
 			const relativeToRoot = path.relative(projectRoot, absolutePath)
-			return `window.location.href='${basePath}/${relativeToRoot}'`
+			return `window.location.href="${basePath}/${relativeToRoot}"`
 		}
 	)
 

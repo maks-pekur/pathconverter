@@ -1,8 +1,8 @@
-// main.js
 const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 const fs = require('fs')
 const { replacePaths } = require('./scripts/replacer')
+const { renameToSnakeCase } = require('./utils/renameToSnakeCase')
 
 let mainWindow
 
@@ -63,10 +63,11 @@ ipcMain.on('start-conversion', (event, conversionParams) => {
 	const links = []
 
 	projectPaths.forEach(projectPath => {
-		const projectName = path.basename(projectPath)
+		const renamedProjectPath = renameToSnakeCase(projectPath) // Переименование папки
+		const projectName = path.basename(renamedProjectPath)
 		const basePath = `/${taskType}/${teamNumber}/${projectName}`
 		logToRenderer(`Starting conversion with base path: ${basePath}`)
-		convertPaths(projectPath, basePath, taskType, links)
+		convertPaths(renamedProjectPath, basePath, taskType, links)
 	})
 
 	mainWindow.webContents.send('links-generated', links)
