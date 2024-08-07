@@ -63,7 +63,7 @@ ipcMain.on('start-conversion', (event, conversionParams) => {
 	const links = []
 
 	projectPaths.forEach(projectPath => {
-		const renamedProjectPath = renameToSnakeCase(projectPath) // Переименование папки
+		const renamedProjectPath = renameToSnakeCase(projectPath)
 		const projectName = path.basename(renamedProjectPath)
 		const basePath = `/${taskType}/${teamNumber}/${projectName}`
 		logToRenderer(`Starting conversion with base path: ${basePath}`)
@@ -99,7 +99,8 @@ function convertPaths(projectPath, basePath, taskType, links) {
 		if (
 			file.endsWith('.html') ||
 			file.endsWith('.php') ||
-			file.endsWith('.css')
+			file.endsWith('.css') ||
+			file.endsWith('.js')
 		) {
 			logToRenderer(`Replacing paths in file: ${file}`)
 			replacePaths(file, projectPath, basePath)
