@@ -18,10 +18,10 @@
     </select>
 
     <label for="team-number">Team Number:</label>
-    <input type="text" id="team-number" placeholder="Enter team number" />
+    <input type="number" id="team-number" placeholder="Enter team number" />
 
     <button id="select-folder">Choose Folder(s)</button>
-    <button id="start-setup">Start Conversion</button>
+    <button id="start-setup" class="accent">Start Conversion</button>
   </div>
 
   <div class="right-panel">
@@ -29,6 +29,24 @@
   </div>
 
   <script src="scripts/renderer.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const teamNumberInput = document.getElementById('team-number');
+      const startSetupButton = document.getElementById('start-setup');
+
+      toggleButtonState();
+
+      function toggleButtonState() {
+        const teamNumber = teamNumberInput.value.trim();
+        const isValid = /^\d{4,}$/.test(teamNumber);
+
+        startSetupButton.disabled = !isValid;
+      }
+
+      teamNumberInput.addEventListener('input', toggleButtonState);
+    });
+
+  </script>
 </body>
 
 </html>
