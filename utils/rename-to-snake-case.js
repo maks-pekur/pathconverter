@@ -1,5 +1,7 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs-extra'
+import path from 'path'
+
+import logger from './logger.js'
 
 function toSnakeCase(str) {
 	return str
@@ -9,24 +11,22 @@ function toSnakeCase(str) {
 		.toLowerCase()
 }
 
-function renameToSnakeCase(directoryPath) {
+export function renameToSnakeCase(directoryPath) {
+	logger.log(`\n👉 Проверяю название...`)
+
 	const dirName = path.basename(directoryPath)
 	const parentDir = path.dirname(directoryPath)
 
 	const snakeCaseName = toSnakeCase(dirName)
+
 	const newDirPath = path.join(parentDir, snakeCaseName)
 
 	if (directoryPath !== newDirPath) {
 		fs.renameSync(directoryPath, newDirPath)
-		console.log(`Папка "${dirName}" переименована в "${snakeCaseName}"`)
+		logger.log(`✅ Папка "${dirName}" переименована в "${snakeCaseName}"`)
 	} else {
-		console.log(`Папка уже в snake_case стиле: "${snakeCaseName}"`)
+		logger.log(`👍 Папка уже в snake_case стиле: "${snakeCaseName}"`)
 	}
 
 	return newDirPath
-}
-
-module.exports = {
-	renameToSnakeCase,
-	toSnakeCase,
 }

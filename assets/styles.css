@@ -1,69 +1,66 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
+	font-family: Arial, sans-serif;
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	background-color: rgb(11, 11, 11);
+	color: #ccc;
 }
 
-
 .left-panel {
-  width: 40%;
-  padding: 20px;
-  border-right: 2px solid #f0f0f0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  gap: 15px;
+	width: 30%;
+	padding: 20px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
 }
 
 .right-panel {
-  width: 60%;
-  padding: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+	width: 60%;
+	padding: 20px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	background-color: #1e2029;
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
 }
 
-button, select, input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%; 
-  box-sizing: border-box; 
+button,
+select,
+input {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 50px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 button {
-  background-color: #4CAF50;
-  color: white;
-  cursor: pointer;
-  margin-top: 5px;
+	background-color: #2b2c2b;
+	color: white;
+	cursor: pointer;
+	margin-top: 5px;
 }
 
 button:hover {
-  background-color: #45a049;
+	background-color: #303130;
 }
 
-label {
-  font-weight: bold;
-}
-
-textarea, pre {
-  width: 100%;
-  height: 40%;
-  margin-top: 10px;
-  resize: none;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-textarea[readonly], pre[readonly] {
-  background-color: #f4f4f4;
+textarea,
+pre {
+	width: 100%;
+	height: 100%;
+	resize: none;
+	padding: 10px;
+	border-radius: 4px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-color: #111111;
+	color: green;
 }
