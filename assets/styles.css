@@ -35,7 +35,8 @@ body {
 
 button,
 select,
-input {
+input,
+textarea {
 	padding: 10px 15px;
 	border: 1px solid #444;
 	border-radius: 50px;
@@ -44,6 +45,7 @@ input {
 	cursor: pointer;
 	box-sizing: border-box;
 	font-size: 16px;
+	width: 100%; /* Теперь элементы занимают всю ширину */
 }
 
 input[type='number']::-webkit-inner-spin-button,
@@ -99,18 +101,7 @@ pre {
 	overflow-y: auto;
 	overflow-x: hidden;
 	border: none;
-}
-
-h1 {
-	color: white;
-	font-size: 24px;
-	font-weight: bold;
-	margin-bottom: 20px;
-}
-
-label {
-	font-size: 14px;
-	color: #bbb;
+	font-size: 13px;
 }
 
 textarea::selection,
@@ -119,4 +110,12 @@ select::selection,
 input::selection {
 	background: #555;
 	color: white;
+}
+
+.hidden {
+	display: none;
+}
+
+.visible {
+	display: block;
 }

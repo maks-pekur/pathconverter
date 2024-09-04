@@ -1,17 +1,29 @@
 import fs from 'fs-extra'
 import path from 'path'
 
-export function walkSync(dir, fileList = []) {
-	const files = fs.readdirSync(dir)
-
-	files.forEach(file => {
-		const filePath = path.join(dir, file)
-		if (fs.statSync(filePath).isDirectory()) {
-			fileList = walkSync(filePath, fileList)
+function safeStatSync(path) {
+	try {
+		return fs.statSync(path)
+	} catch (error) {
+		if (error.code === 'EACCES') {
+			logger.log(`❌ Недостаточно прав для доступа к файлу: ${path}`)
 		} else {
-			fileList.push(filePath)
+			throw error
+		}
+	}
+}
+
+export function walkSync(dir) {
+	let files = []
+	fs.readdirSync(dir).forEach(file => {
+		const fullPath = path.join(dir, file)
+		const stat = safeStatSync(fullPath)
+		if (stat && stat.isDirectory()) {
+			files = files.concat(walkSync(fullPath))
+		} else if (stat) {
+			files.push(fullPath)
 		}
 	})
-
-	return fileList
+	return files
 }
+

@@ -15,6 +15,7 @@ function shouldExcludePath(filePath) {
 		filePath.startsWith('mailto:') ||
 		filePath.startsWith('javascript:void(0)') ||
 		filePath.startsWith('#form') ||
+		filePath === '#' ||
 		filePath.trim() === ''
 	)
 }
@@ -26,6 +27,28 @@ function processAttributes(content, fileDir, basePath, project, taskType) {
 			const isCanonical = string.slice(0, offset).includes('rel="canonical"')
 			if (isCanonical || shouldExcludePath(relativePath)) return match
 
+			// Если это якорь `href="#something"`, добавляем перед ним `index.html`
+			if (relativePath.startsWith('#')) {
+				const relativeToRoot = path.relative(project, fileDir)
+				return `${attr}="${basePath}/${relativeToRoot}/index.html${relativePath}"`
+			}
+
+			// Обрабатываем пути, начинающиеся с '../' и с любым количеством вложенности
+			if (relativePath.startsWith('../')) {
+				let absolutePath = path.resolve(fileDir, relativePath)
+				// Если в относительном пути есть якорь, добавляем index.html перед якорем
+				if (relativePath.includes('#')) {
+					const [pathPart, anchor] = relativePath.split('#')
+					absolutePath =
+						path.resolve(fileDir, pathPart) + '/index.html#' + anchor
+				} else {
+					absolutePath = path.resolve(fileDir, relativePath)
+				}
+				const relativeToRoot = path.relative(project, absolutePath)
+				return `${attr}="${basePath}/${relativeToRoot}"`
+			}
+
+			// Обрабатываем обычные пути, заменяя .php на .html
 			if (taskType === 'websites') {
 				relativePath = relativePath.replace(/\.php$/, '.html')
 			}
