@@ -1,39 +1,75 @@
 {
-	"name": "path-replace",
-	"version": "1.0.0",
-	"description": "",
-	"main": "main.js",
-	"scripts": {
-		"start": "electron .",
-		"build": "electron-builder --mac --win"
-	},
-	"keywords": [],
-	"author": "",
-	"type": "module",
-	"license": "ISC",
-	"devDependencies": {
-		"electron": "^30.0.2",
-		"electron-builder": "^24.13.3"
-	},
-	"build": {
-		"appId": "com.example.pathreplace",
-		"productName": "Path Replace",
-		"mac": {
-			"target": [
-				"dmg",
-				"zip"
-			],
-			"icon": "assets/logo.icns"
-		},
-		"win": {
-			"target": [
-				"nsis",
-				"zip"
-			],
-			"icon": "assets/logo.ico"
-		}
-	},
-	"dependencies": {
-		"fs-extra": "^11.2.0"
-	}
+  "name": "path-replace",
+  "version": "2.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac --win"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^32.0.1",
+    "electron-builder": "^25.0.5"
+  },
+  "build": {
+    "appId": "com.example.pathreplace",
+    "productName": "Path Replace",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "assets/logo.icns",
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        },
+        "zip"
+      ],
+      "icon": "assets/logo.ico",
+      "artifactName": "${productName}-${version}-setup.${ext}",
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "maks-pekur",
+          "repo": "pathconverter"
+        }
+      ],
+      "forceCodeSigning": false,
+      "publisherName": "D900",
+      "verifyUpdateCodeSignature": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/logo.ico",
+      "uninstallerIcon": "assets/logo.ico",
+      "installerHeaderIcon": "assets/logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Path Replace"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "maks-pekur",
+        "repo": "pathconverter"
+      }
+    ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.4",
+    "fs-extra": "^11.2.0"
+  }
 }

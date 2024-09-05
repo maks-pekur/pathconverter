@@ -1,41 +1,43 @@
-import { dialog, ipcMain } from 'electron'
-import path from 'path'
-import logger from '../utils/logger.js'
-import { startSetup } from './conversion.js'
+import { dialog, ipcMain } from "electron";
+import path from "path";
+import logger from "../utils/logger.js";
+import { startSetup } from "./conversion.js";
 
-let handlersSetup = false
+let handlersSetup = false;
 
 export function setupIpcHandlers(win) {
-	if (handlersSetup) return
+  if (handlersSetup) return;
 
-	ipcMain.handle('dialog:openFolders', async () => {
-		try {
-			const result = await dialog.showOpenDialog(win, {
-				properties: ['openDirectory', 'multiSelections'],
-			})
+  ipcMain.handle("dialog:openFolders", async () => {
+    try {
+      const result = await dialog.showOpenDialog(win, {
+        properties: ["openDirectory", "multiSelections"],
+      });
 
-			const projects = result.filePaths.map(project => path.basename(project))
+      const projects = result.filePaths.map((project) =>
+        path.basename(project)
+      );
 
-			logger.log(
-				`\nК обработке (${projects.length}):\n${projects
-					.map((project, index) => `${index + 1}. ${project}`)
-					.join('\n')}`
-			)
+      logger.log(
+        `\nВыбрано проектов (${projects.length}):\n${projects
+          .map((project, index) => `${index + 1}. ${project}`)
+          .join("\n")}`
+      );
 
-			return result.filePaths || []
-		} catch (error) {
-			logger.log(`Error opening folders: ${error.message}`)
-			return []
-		}
-	})
+      return result.filePaths || [];
+    } catch (error) {
+      logger.log(`Error opening folders: ${error.message}`);
+      return [];
+    }
+  });
 
-	ipcMain.on('start-setup', (event, params) => {
-		startSetup(params, win)
-	})
+  ipcMain.on("start-setup", (event, params) => {
+    startSetup(params, win);
+  });
 
-	ipcMain.on('log-message', (event, message) => {
-		logger.log(message)
-	})
+  ipcMain.on("log-message", (event, message) => {
+    logger.log(message);
+  });
 
-	handlersSetup = true
+  handlersSetup = true;
 }

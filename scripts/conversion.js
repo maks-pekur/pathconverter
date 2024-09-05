@@ -1,46 +1,47 @@
-import path from 'path'
+import path from "path";
 
-import { TaskType } from '../constants/index.js'
+import { TaskType } from "../constants/index.js";
 
-import logger from '../utils/logger.js'
+import logger from "../utils/logger.js";
 
-import { addCookie } from '../utils/add-cookie.js'
-import { convertToHtml } from '../utils/convert-to-html.js'
-import { generateLinks } from '../utils/generate-links.js'
-import { renameToSnakeCase } from '../utils/rename-to-snake-case.js'
-import { replaceToAbsolutePath } from '../utils/replace-to-absolute-path.js'
+import { addCookie } from "../utils/add-cookie.js";
+import { convertToHtml } from "../utils/convert-to-html.js";
+import { generateLinks } from "../utils/generate-links.js";
+import { renameToSnakeCase } from "../utils/rename-to-snake-case.js";
+import { replaceToAbsolutePath } from "../utils/replace-to-absolute-path.js";
 
 export function startSetup(params, win) {
-	const { projects, taskType, teamNumber } = params
+  const { projects, taskType, teamNumber } = params;
 
-	if (!projects.length || !taskType || !teamNumber) {
-		logger.log('Invalid conversion parameters.')
-		return
-	}
+  if (!projects.length || !taskType || !teamNumber) {
+    logger.log("Invalid conversion parameters.");
+    return;
+  }
 
-	projects.forEach(project => {
-		logger.log(`\nОбрабатываю ${path.basename(project)}...`)
+  const basePaths = [];
 
-		const name = renameToSnakeCase(project)
+  projects.forEach((project) => {
+    logger.log(`\nОбрабатываю ${path.basename(project)}...`);
 
-		const basePath = `/${taskType}/${teamNumber}/${path.basename(name)}`
+    const name = renameToSnakeCase(project);
 
-		if (taskType === TaskType.WEBSITES) {
-			convertToHtml(name)
-			addCookie(name, basePath)
-		}
+    const basePath = `/${taskType}/${teamNumber}/${path.basename(name)}`;
+    basePaths.push(basePath);
 
-		replaceToAbsolutePath(name, basePath, taskType)
+    if (taskType === TaskType.WEBSITES) {
+      convertToHtml(name);
+      addCookie(name, basePath);
+    }
 
-		const basePaths = projects.map(
-			project => `/${taskType}/${teamNumber}/${path.basename(project)}`
-		)
+    replaceToAbsolutePath(name, basePath, taskType);
 
-		logger.log(`\n👉 Генерирую ссылки...\n`)
+    logger.log(`\n👌 ${path.basename(name)} успешно обработан!`);
+  });
 
-		const links = generateLinks(basePaths, taskType)
-		win.webContents.send('links-generated', links)
+  logger.log(`\n👉 Генерирую ссылки...\n`);
 
-		logger.log('\n🎉 Обработка завершена успешно!')
-	})
+  const links = generateLinks(basePaths, taskType);
+  win.webContents.send("links-generated", links);
+
+  logger.log("\n🎉 Обработка всех проектов завершена успешно!");
 }

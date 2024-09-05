@@ -29,22 +29,22 @@ function processAttributes(content, fileDir, basePath, project, taskType) {
 
       // Если это якорь `href="#something"`, добавляем перед ним `index.html`
       if (relativePath.startsWith("#")) {
-        const relativeToRoot = path.relative(project, fileDir);
+        const relativeToRoot = path.posix.relative(project, fileDir);
         return `${attr}="${basePath}/${relativeToRoot}/index.html${relativePath}"`;
       }
 
       // Обрабатываем пути, начинающиеся с '../' и с любым количеством вложенности
       if (relativePath.startsWith("../")) {
-        let absolutePath = path.resolve(fileDir, relativePath);
+        let absolutePath = path.posix.resolve(fileDir, relativePath);
         // Если в относительном пути есть якорь, добавляем index.html перед якорем
         if (relativePath.includes("#")) {
           const [pathPart, anchor] = relativePath.split("#");
           absolutePath =
-            path.resolve(fileDir, pathPart) + "/index.html#" + anchor;
+            path.posix.resolve(fileDir, pathPart) + "/index.html#" + anchor;
         } else {
-          absolutePath = path.resolve(fileDir, relativePath);
+          absolutePath = path.posix.resolve(fileDir, relativePath);
         }
-        const relativeToRoot = path.relative(project, absolutePath);
+        const relativeToRoot = path.posix.relative(project, absolutePath);
         return `${attr}="${basePath}/${relativeToRoot}"`;
       }
 
@@ -56,14 +56,14 @@ function processAttributes(content, fileDir, basePath, project, taskType) {
       let absolutePath;
 
       if (relativePath === "./" || relativePath === ".") {
-        absolutePath = path.join(fileDir, "index.html");
+        absolutePath = path.posix.join(fileDir, "index.html");
       } else if (relativePath.startsWith("#")) {
-        absolutePath = path.join(fileDir, "index.html") + relativePath;
+        absolutePath = path.posix.join(fileDir, "index.html") + relativePath;
       } else {
-        absolutePath = path.resolve(fileDir, relativePath);
+        absolutePath = path.posix.resolve(fileDir, relativePath);
       }
 
-      const relativeToRoot = path.relative(project, absolutePath);
+      const relativeToRoot = path.posix.relative(project, absolutePath);
       return `${attr}="${basePath}/${relativeToRoot}"`;
     }
   );
@@ -84,14 +84,14 @@ function processSrcset(content, fileDir, basePath, project, taskType) {
 
         let absolutePath;
         if (url === "./" || url === ".") {
-          absolutePath = path.join(fileDir, "index.html");
+          absolutePath = path.posix.join(fileDir, "index.html");
         } else if (url.startsWith("#")) {
-          absolutePath = path.join(fileDir, "index.html") + url;
+          absolutePath = path.posix.join(fileDir, "index.html") + url;
         } else {
-          absolutePath = path.resolve(fileDir, url);
+          absolutePath = path.posix.resolve(fileDir, url);
         }
 
-        const relativeToRoot = path.relative(project, absolutePath);
+        const relativeToRoot = path.posix.relative(project, absolutePath);
         return `${basePath}/${relativeToRoot} ${descriptor || ""}`.trim();
       })
       .join(", ");
@@ -112,12 +112,12 @@ function processCssUrls(content, fileDir, basePath, project, taskType) {
 
       let absolutePath;
       if (relativePath === "./" || relativePath === ".") {
-        absolutePath = path.join(fileDir, "index.html");
+        absolutePath = path.posix.join(fileDir, "index.html");
       } else {
-        absolutePath = path.resolve(fileDir, relativePath);
+        absolutePath = path.posix.resolve(fileDir, relativePath);
       }
 
-      const relativeToRoot = path.relative(project, absolutePath);
+      const relativeToRoot = path.posix.relative(project, absolutePath);
       return `url(${basePath}/${relativeToRoot})`;
     }
   );
@@ -136,12 +136,12 @@ function processInlineStyles(content, fileDir, basePath, project, taskType) {
 
         let absolutePath;
         if (relativePath === "./" || relativePath === ".") {
-          absolutePath = path.join(fileDir, "index.html");
+          absolutePath = path.posix.join(fileDir, "index.html");
         } else {
-          absolutePath = path.resolve(fileDir, relativePath);
+          absolutePath = path.posix.resolve(fileDir, relativePath);
         }
 
-        const relativeToRoot = path.relative(project, absolutePath);
+        const relativeToRoot = path.posix.relative(project, absolutePath);
         return `url(${basePath}/${relativeToRoot})`;
       }
     );
@@ -161,12 +161,12 @@ function processJsPaths(content, fileDir, basePath, project, taskType) {
 
       let absolutePath;
       if (relativePath === "./" || relativePath === ".") {
-        absolutePath = path.join(fileDir, "index.html");
+        absolutePath = path.posix.join(fileDir, "index.html");
       } else {
-        absolutePath = path.resolve(fileDir, relativePath);
+        absolutePath = path.posix.resolve(fileDir, relativePath);
       }
 
-      const relativeToRoot = path.relative(project, absolutePath);
+      const relativeToRoot = path.posix.relative(project, absolutePath);
       return `${attr}="${basePath}/${relativeToRoot}"`;
     }
   );
@@ -192,7 +192,7 @@ export function replaceToAbsolutePath(project, basePath, taskType) {
       file.endsWith(".js")
     ) {
       let content = fs.readFileSync(file, "utf-8");
-      const fileDir = path.dirname(file);
+      const fileDir = path.posix.dirname(file);
 
       content = processAttributes(
         content,
@@ -213,7 +213,7 @@ export function replaceToAbsolutePath(project, basePath, taskType) {
       content = processJsPaths(content, fileDir, basePath, project, taskType);
 
       fs.writeFileSync(file, content, "utf-8");
-      logger.log(`✅ ${path.basename(file)} успешно обработан.`);
+      logger.log(`✅ ${path.posix.basename(file)} успешно обработан.`);
     }
   });
 }

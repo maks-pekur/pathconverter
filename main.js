@@ -1,51 +1,63 @@
-import { app, BrowserWindow } from 'electron'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import { app, BrowserWindow, ipcMain } from "electron";
+import pkg from "electron-updater";
+import path from "path";
+import { fileURLToPath } from "url";
+const { autoUpdater } = pkg;
 
-import { setupIpcHandlers } from './scripts/ipcHandlers.js'
-import logger from './utils/logger.js'
+import { setupIpcHandlers } from "./scripts/ipcHandlers.js";
+import logger from "./utils/logger.js";
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-let win
+let win;
 
 function createWindow() {
-	win = new BrowserWindow({
-		width: 800,
-		height: 600,
-		webPreferences: {
-			preload: path.join(__dirname, 'scripts/preload.js'),
-			contextIsolation: true,
-			nodeIntegration: false,
-		},
-	})
+  win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, "scripts/preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
+  });
 
-	win.loadFile('index.html')
-	setupIpcHandlers(win)
+  win.loadFile("index.html");
+  setupIpcHandlers(win);
 }
 
 app
-	.whenReady()
-	.then(() => {
-		if (!global.loggerInitialized) {
-			logger.log('Выбирете один или несколько проектов')
-			global.loggerInitialized = true
-		}
-		createWindow()
-	})
-	.catch(err => {
-		console.error('Failed to create window:', err)
-	})
+  .whenReady()
+  .then(() => {
+    if (!global.loggerInitialized) {
+      logger.log("Привет 👋! Выбери тип таски и введи номер команды.");
+      global.loggerInitialized = true;
+    }
+    createWindow();
 
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit()
-	}
-})
+    autoUpdater.checkForUpdatesAndNotify();
+  })
+  .catch((err) => {
+    console.error("Failed to create window:", err);
+  });
 
-app.on('activate', () => {
-	if (BrowserWindow.getAllWindows().length === 0) {
-		createWindow()
-	}
-})
+autoUpdater.on("update-downloaded", () => {
+  win.webContents.send("update_available");
+});
+
+ipcMain.on("install-update", () => {
+  autoUpdater.quitAndInstall();
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
+
+app.on("activate", () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow();
+  }
+});

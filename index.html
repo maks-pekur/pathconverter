@@ -10,13 +10,13 @@
 <body>
   <div class="left-panel">
 
-    <select id="setup-type">
-      <option value="" disabled selected>Enter setup type</option>
-      <option value="absolute_path">Absolute path</option>
+    <select id="setup-type" disabled>
+      <option value="">Enter setup type</option>
+      <option value="absolute_path" selected>Absolute path</option>
       <option value="relative_path">Relative path</option>
     </select>
 
-    <div id="task-type-container" class="hidden">
+    <div id="task-type-container">
       <select id="task-type">
         <option value="" disabled selected>Enter task type</option>
         <option value="landers">Landers</option>
@@ -25,12 +25,12 @@
       </select>
     </div>
 
-    <div id="team-number-container" class="hidden">
+    <div id="team-number-container">
       <input type="number" id="team-number" placeholder="Enter team number" />
     </div>
 
-    <button id="select-folder" class="hidden">Choose Folder(s)</button>
-    <button id="start-setup" class="accent hidden">Start Conversion</button>
+    <button id="select-folder" disabled>Choose Folder(s)</button>
+    <button id="start-setup" class="accent" disabled>Start Conversion</button>
 
   </div>
 
@@ -41,36 +41,21 @@
   <script src="scripts/renderer.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const setupTypeSelect = document.getElementById('setup-type');
-      const taskTypeContainer = document.getElementById('task-type-container');
-      const taskTypeSelect = document.getElementById('task-type');
-      const teamNumberContainer = document.getElementById('team-number-container');
       const teamNumberInput = document.getElementById('team-number');
       const selectFolderButton = document.getElementById('select-folder');
       const startSetupButton = document.getElementById('start-setup');
 
-      setupTypeSelect.addEventListener('change', () => {
-        taskTypeContainer.classList.remove('hidden');
-      });
+      toggleButtonState();
 
-      taskTypeSelect.addEventListener('change', () => {
-        teamNumberContainer.classList.remove('hidden');
-      });
-
-      teamNumberInput.addEventListener('input', () => {
+      function toggleButtonState() {
         const teamNumber = teamNumberInput.value.trim();
-        const isValidTeamNumber = /^\d{4,}$/.test(teamNumber);
+        const isValid = /^\d{4,}$/.test(teamNumber);
 
-        if (isValidTeamNumber) {
-          selectFolderButton.classList.remove('hidden');
-          startSetupButton.classList.remove('hidden');
-          startSetupButton.disabled = false;
-        } else {
-          selectFolderButton.classList.add('hidden');
-          startSetupButton.classList.add('hidden');
-          startSetupButton.disabled = true;
-        }
-      });
+        selectFolderButton.disabled = !isValid;
+        startSetupButton.disabled = !isValid;
+      }
+
+      teamNumberInput.addEventListener('input', toggleButtonState);
 
     });
   </script>
