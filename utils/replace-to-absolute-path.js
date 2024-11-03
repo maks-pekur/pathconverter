@@ -44,7 +44,9 @@ function processAttributes(content, fileDir, basePath, project, taskType) {
         } else {
           absolutePath = path.posix.resolve(fileDir, relativePath);
         }
-        const relativeToRoot = path.posix.relative(project, absolutePath);
+        // Применяем нормализацию пути
+        const normalizedPath = path.posix.normalize(absolutePath);
+        const relativeToRoot = path.posix.relative(project, normalizedPath);
         return `${attr}="${basePath}/${relativeToRoot}"`;
       }
 
@@ -63,7 +65,9 @@ function processAttributes(content, fileDir, basePath, project, taskType) {
         absolutePath = path.posix.resolve(fileDir, relativePath);
       }
 
-      const relativeToRoot = path.posix.relative(project, absolutePath);
+      // Применяем нормализацию пути
+      const normalizedPath = path.posix.normalize(absolutePath);
+      const relativeToRoot = path.posix.relative(project, normalizedPath);
       return `${attr}="${basePath}/${relativeToRoot}"`;
     }
   );

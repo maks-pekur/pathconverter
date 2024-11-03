@@ -5,7 +5,7 @@ export function generateLinks(paths, taskType) {
 	const generatedLinks = paths.map((path, index) => {
 		const baseUrl = `https://umpaloompa.bio${path}`
 		const finalUrl =
-			taskType === TaskType.WEBSITES ? `${baseUrl}/index.html` : `${baseUrl}`
+			taskType === TaskType.WEBSITES ? `${baseUrl}/index.html` : `${baseUrl}/index.php`
 
 		return finalUrl
 	})
